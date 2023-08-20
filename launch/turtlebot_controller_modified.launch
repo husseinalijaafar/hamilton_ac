@@ -1,0 +1,22 @@
+<launch>
+    <!-- Launch Gazebo with TurtleBot3 World -->
+    <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_world.launch"/>
+
+    <!-- Set ROS parameters for the modified controller (if any) -->
+    <param name="max_lin_vel_turtlebot" value="0.22" />
+    <param name="max_ang_vel_turtlebot" value="2.84" />
+    <!-- Add other parameters as needed -->
+
+    <!-- Launch the modified controller -->
+    <node name="adaptive_controller_modified" pkg="hamilton_ac" type="controller_modified.py" output="screen">
+        <!-- If the controller requires any arguments, add them here -->
+        <!-- <param name="some_param" value="some_value" /> -->
+    </node>
+
+    <!-- Launch the force_global node -->
+    <node name="force_global" pkg="hamilton_ac" type="force_global.py" output="screen">
+    </node>
+
+    <!-- Launch the reference generator or any other nodes -->
+    <node name="joy_reference" pkg="hamilton_ac" type="joy_ref.py" output="screen"/>
+</launch>
