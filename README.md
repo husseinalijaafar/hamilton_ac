@@ -1,4 +1,11 @@
 # hamilton_ac
+
+To run
+
+```
+roslaunch hamilton_ac turtlebot_controller_modified.launch
+```
+
 This repository contains the source code for [Decentralized Adaptive Control for Collaborative Manipulation of Rigid Bodies](https://arxiv.org/pdf/2005.03153.pdf), by Preston Culbertson, Jean-Jacques Slotine, and Mac Schwager.
 
 ## Installation ##

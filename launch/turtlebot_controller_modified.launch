@@ -9,14 +9,39 @@
 
     <!-- Launch the modified controller -->
     <node name="adaptive_controller_modified" pkg="hamilton_ac" type="controller_modified.py" output="screen">
+        <param name="max_lin_vel_turtlebot" value="0.22"/>
+        <param name="max_ang_vel_turtlebot" value="2.84"/>
+
         <!-- If the controller requires any arguments, add them here -->
         <!-- <param name="some_param" value="some_value" /> -->
+
     </node>
 
     <!-- Launch the force_global node -->
     <node name="force_global" pkg="hamilton_ac" type="force_global.py" output="screen">
+        <param name="/ouijabot1/offset_angle" value="-1.57" />
+        <param name="/ouijabot1/moment_arm" value="0., 0., 0." />
+        <param name="/ouijabot2/offset_angle" value="3.14" />
+        <param name="/ouijabot2/moment_arm" value="-0.337, -0.215, 0." />
+        <param name="/ouijabot3/offset_angle" value="1.57" />
+        <param name="/ouijabot3/moment_arm" value="-0.829, -0.209, 0." />
+        <param name="/ouijabot4/offset_angle" value="1.57" />
+        <param name="/ouijabot4/moment_arm" value="-1.174, 0.149, 0." />
+        <param name="/ouijabot5/offset_angle" value="-0.52" />
+        <param name="/ouijabot4/moment_arm" value="-0.856, 0.441, 0." />
+        <param name="/ouijabot6/offset_angle" value="-0.52" />
+        <param name="/ouijabot6/moment_arm" value="-0.338, 0.261, 0." />
     </node>
 
+    <include file="$(find hamilton_ac)/launch/params_joy.launch" />
     <!-- Launch the reference generator or any other nodes -->
-    <node name="joy_reference" pkg="hamilton_ac" type="joy_ref.py" output="screen"/>
+    <node name="joy_reference" pkg="hamilton_ac" type="joy_ref.py" output="screen">
+        <param name="max_lin_vel" value="0.5"/>
+        <param name="max_ang_vel" value="0.5"/>
+        <param name="lin_accel_scale" value="0.75"/>
+        <param name="ang_accel_scale" value="0.75"/>
+        <param name="vel_decay" value="1.5" />
+        <param name="max_delay" value="1.5"/>
+        
+    </node>
 </launch>

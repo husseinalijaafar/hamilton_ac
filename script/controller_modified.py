@@ -13,6 +13,8 @@ class AdaptiveController():
     #implements adaptive controller for ouijabot in 2D manipulation
     #a = [m,J,m*rpx,m*rpy,u1,u1*rix,u1*riy,u1*||ri||,rix,riy]
     def __init__(self):
+        self.max_linear_velocity = 0.22
+        self.max_angular_velocity = 2.84
         self.controllerReset()
         self.getParams()
         self.active = False
@@ -38,8 +40,7 @@ class AdaptiveController():
             queue_size=1)
         self.cmd_timer = rospy.Timer(rospy.Duration(0.1),
             self.controllerCallback)
-        self.max_lin_vel = rospy.get_param('~max_lin_vel_turtlebot')
-        self.max_ang_vel = rospy.get_param('~max_ang_vel_turtlebot')
+
 
     def controllerReset(self):
         self.tau, self.F = np.zeros(3), np.zeros(3)
@@ -59,7 +60,9 @@ class AdaptiveController():
         self.q_filt = rospy.get_param('/ac/q_filt')
         self.dq_filt = rospy.get_param('/ac/dq_filt')
         self.offset_angle = rospy.get_param('offset_angle',0.) #angle offset
-        self.moment_arm = np.fromstring(rospy.get_param('moment_arm'), sep=", ")
+        # self.moment_arm = np.fromstring(rospy.get_param('moment_arm'), sep=", ")
+        self.moment_arm = np.fromstring(rospy.get_param('/force_global/ouijabot1/moment_arm'), sep=", ")
+
             #from payload frame, default to zero
         self.v_max = rospy.get_param('/ac/v_max',5.0)
         self.a_hat[0] = rospy.get_param('/ac/m_init',15.)
@@ -140,8 +143,8 @@ class AdaptiveController():
             cmd_tb = Twist()
             cmd_tb.linear.x = lin_cmd
             cmd_tb.angular.z = ang_cmd
-            cmd_tb.linear.x = max(min(cmd_tb.linear.x, self.max_linear_velocity), self.min_linear_velocity)
-            cmd_tb.angular.z = max(min(cmd_tb.angular.z, self.max_angular_velocity), self.min_angular_velocity)
+            # cmd_tb.linear.x = max(min(cmd_tb.linear.x, self.max_linear_velocity), self.min_linear_velocity)
+            # cmd_tb.angular.z = max(min(cmd_tb.angular.z, self.max_angular_velocity), self.min_angular_velocity)
             self.cmd_vel_pub.publish(cmd_tb)
             
 
@@ -154,8 +157,8 @@ class AdaptiveController():
 
     def stateCallback(self,data):
         '''handles measurement callback from Optitrack'''
-        th = quaternion_to_angle(data.pose.orientation)
-        q_new = np.array([data.pose.position.x,data.pose.position.y,th])
+        th = quaternion_to_angle(data.pose.pose.orientation)
+        q_new = np.array([data.pose.pose.position.x,data.pose.pose.position.y,th])
         self.q_raw = q_new
 
     def refCallback(self,data):

@@ -11,15 +11,11 @@ class ForceGlobal():
         self.theta = 0.
         self.tau = np.zeros(3)
         self.offset_angle = rospy.get_param('offset_angle',0.) #angle offset
-            #from payload frame, default to zero
-
+        #from payload frame, default to zero
         self.cmd_pub = rospy.Publisher('cmd_wrench',Twist,queue_size=1)
-	self.state_sub = rospy.Subscriber('state',PoseStamped,
-            self.stateCallback)
-
+        self.state_sub = rospy.Subscriber('state',PoseStamped, self.stateCallback)
         self.wrench_sub = rospy.Subscriber('/fc/cmd_global',Twist,self.refCallback)
-        self.cmd_timer = rospy.Timer(rospy.Duration(0.1),
-            self.controllerCallback)
+        self.cmd_timer = rospy.Timer(rospy.Duration(0.1), self.controllerCallback)
 
 
     def controllerCallback(self,event):
