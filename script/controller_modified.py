@@ -24,8 +24,8 @@ class AdaptiveController():
         self.state_time = -1
         self.q_prev = np.zeros(3)
 
-        self.cmd_pub = rospy.Publisher('cmd_global',Twist,queue_size=1)
-        self.cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+        self.cmd_pub = rospy.Publisher('/cmd_vel',Twist,queue_size=1)
+        # self.cmd_vel_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
         # self.state_sub = rospy.Subscriber('state',PoseStamped, self.stateCallback)
         self.state_sub = rospy.Subscriber('/odom', Odometry, self.stateCallback)
@@ -136,16 +136,13 @@ class AdaptiveController():
                 self.e_norm_pub.publish(Float64(np.linalg.norm(s)))
 
             #publish command in world frame; use force_global to rotate
-            lin_cmd = Vector3(x=self.tau[0],y=self.tau[1],z=0.)
+            lin_cmd = Vector3(x=self.tau[0],y=0,z=0.)
             ang_cmd = Vector3(x=0.,y=0.,z=self.tau[2])
             cmd_msg = Twist(linear=lin_cmd,angular=ang_cmd)
-            self.cmd_pub.publish(cmd_msg)
-            cmd_tb = Twist()
-            cmd_tb.linear.x = lin_cmd
-            cmd_tb.angular.z = ang_cmd
+
             # cmd_tb.linear.x = max(min(cmd_tb.linear.x, self.max_linear_velocity), self.min_linear_velocity)
             # cmd_tb.angular.z = max(min(cmd_tb.angular.z, self.max_angular_velocity), self.min_angular_velocity)
-            self.cmd_vel_pub.publish(cmd_tb)
+            self.cmd_pub.publish(cmd_msg)
             
 
         state_msg = Reference(Vector3(*self.q),Vector3(*self.dq),Vector3())

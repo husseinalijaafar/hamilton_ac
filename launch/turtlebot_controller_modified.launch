@@ -7,6 +7,16 @@
     <param name="max_ang_vel_turtlebot" value="2.84" />
     <!-- Add other parameters as needed -->
 
+    <node name="ref_node" pkg="hamilton_ac" type="circle_ref.py" output="screen">
+        <param name="R" value="2."/>
+        <param name="T" value="45.0"/>
+        <param name="c_x" value="0.0"/>
+        <param name="c_y" value="0.0"/>
+        <param name="rot" value="false"/>
+        <param name="max_angle" value="1.57"/>
+        <param name="pub_freq" value="10."/>
+    </node>
+
     <!-- Launch the modified controller -->
     <node name="adaptive_controller_modified" pkg="hamilton_ac" type="controller_modified.py" output="screen">
         <param name="max_lin_vel_turtlebot" value="0.22"/>
