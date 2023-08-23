@@ -17,7 +17,7 @@ class AdaptiveController():
         self.max_angular_velocity = 2.84
         self.controllerReset()
         self.getParams()
-        self.active = False
+        self.active = True
         self.q = self.q_raw = self.dq = np.zeros(3)
         self.q_des, self.dq_des = np.zeros(3), np.zeros(3)
         self.ddq_des = np.zeros(3)
@@ -101,8 +101,9 @@ class AdaptiveController():
             self.q = q_smoothed
             self.dq = (1-self.dq_filt)*dq_new + self.dq_filt*self.dq
             self.state_time= event.current_real.to_sec()
-
+            print('q: ', self.q)
             if self.active:
+                print('active')
                 q_err = self.q - self.q_des
                 if abs(q_err[2]) > np.pi:
                     rospy.logwarn('this was a problem')
